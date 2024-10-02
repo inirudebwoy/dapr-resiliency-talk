@@ -1,0 +1,29 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: bindingresiliency
+spec:
+  policies:
+    timeouts:
+      general: 5s
+      important: 60s
+      largeResponse: 10s
+    retries:
+      dbretry:
+      # can this include a policy for exponential retries?
+      # backoff?
+        policy: constant
+        duration: 5s
+        maxRetries: 3
+
+    circuitBreakers:
+      dbcd:
+        maxRequests: 1
+        timeout: 15s
+        trip: consecutiveFailures >= 3
+  targets:
+    components:
+      sqldb:
+        outbound:
+          retry: dbretry
+          circuitBreaker: dbcd
