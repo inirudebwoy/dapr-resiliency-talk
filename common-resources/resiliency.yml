@@ -15,15 +15,28 @@ spec:
         policy: constant
         duration: 5s
         maxRetries: 3
+      internal-retry:
+        policy: constant
+        duration: 2s
+        maxRetries: 9
 
     circuitBreakers:
       dbcd:
         maxRequests: 1
         timeout: 15s
         trip: consecutiveFailures >= 3
+      internal-retry:
+        maxRequests: 1
+        timeout: 3s
+        trip: consecutiveFailures >= 3
+        
   targets:
     components:
       sqldb:
         outbound:
           retry: dbretry
           circuitBreaker: dbcd
+
+    apps:
+      resilient-internal:
+        retry: internal-retry

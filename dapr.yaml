@@ -1,11 +1,11 @@
 version: 1
 common:
-  resourcesPath: ./common-resources/
+  resourcesPath: ./common-resources
 apps:
-  - appDirPath: ./resilient-db/
-    appID: resilient-db
-    appPort: 5001
+  - appID: resilient-db
+    appDirPath: ./resilient-db/
     command: ["python", "app.py"]
+    appPort: 5001
   - appID: resilient-internal
     appDirPath: ./resilient-internal/
     command: ["python", "app.py"]
