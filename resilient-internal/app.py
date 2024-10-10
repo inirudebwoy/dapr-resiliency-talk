@@ -20,12 +20,12 @@ def getConstraint():
     time.sleep(5)
 
     # Simulate a 50% chance of failure
-    if random.random() < 0.5:
-        return (
-            json.dumps({"success": False, "error": "Service failed"}),
-            500,
-            {"ContentType": "application/json"},
-        )
+    # if random.random() < 0.2:
+    #     return (
+    #         json.dumps({"success": False, "error": "Service failed"}),
+    #         500,
+    #         {"ContentType": "application/json"},
+    #     )
 
     return (
         json.dumps({"success": True, "constraint": "Some constraint data"}),
@@ -41,14 +41,8 @@ request_counter = 0
 def alwaysFail():
     global request_counter
     request_counter += 1
-    print(
-        f"Always fail request received with request count: {request_counter}",
-        flush=True,
-    )
 
-    if request_counter % 10 == 0:
-        return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
-    elif request_counter % 10 < 4:
+    if request_counter % 5 == 0:
         return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
     else:
         # Generate a random 5xx error code

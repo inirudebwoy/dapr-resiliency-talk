@@ -1,6 +1,6 @@
 apiVersion: dapr.io/v1alpha1
 kind: HTTPEndpoint
 metadata:
-  name: external-notifications 
+  name: external-service 
 spec:
   baseUrl: http://localhost:5003

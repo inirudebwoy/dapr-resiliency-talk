@@ -8,35 +8,46 @@ spec:
       general: 5s
       important: 60s
       largeResponse: 10s
+
     retries:
-      dbretry:
-      # can this include a policy for exponential retries?
-      # backoff?
-        policy: constant
+      db-retry:
+        policy: exponential
         duration: 5s
         maxRetries: 3
       internal-retry:
         policy: constant
         duration: 2s
-        maxRetries: 9
+        maxRetries: 7
+      external-retry:
+        policy: constant
+        duration: 2s
+        maxRetries: 7
 
     circuitBreakers:
-      dbcd:
+      db-cb:
         maxRequests: 1
         timeout: 15s
         trip: consecutiveFailures >= 3
-      internal-retry:
+      internal-cb:
         maxRequests: 1
-        timeout: 3s
-        trip: consecutiveFailures >= 3
+        timeout: 30s
+        trip: consecutiveFailures >= 2
+      external-cb:
+        maxRequests: 1
+        timeout: 45s
+        trip: consecutiveFailures >= 2
         
   targets:
     components:
       sqldb:
         outbound:
-          retry: dbretry
-          circuitBreaker: dbcd
+          retry: db-retry
+          circuitBreaker: db-cb
 
     apps:
       resilient-internal:
         retry: internal-retry
+        circuitBreaker: internal-cb
+      external-service:
+        retry: external-retry
+        circuitBreaker: external-cb

@@ -1,5 +1,12 @@
 # README
 
+## prerequisites
+
+- `docker`
+- `docker-compose`
+- `dapr` https://docs.dapr.io/getting-started/install-dapr-cli/
+
+
 ## Running
 
 ### DB
@@ -28,4 +35,38 @@ dapr run --app-id resilient-internal --app-port 5002 --resources-path ./common-r
 
 ```bash
 dapr run --app-id resilient-db --app-port 5001 --resources-path ./common-resources,./resilient-db/.dapr/resources -- python resilient-db/app.py
+```
+
+
+## Executing scenarios
+
+### default 
+
+Default scenario, with no errors.
+You may trigger error by shutting down the DB.
+
+Execute the following command:
+```bash
+
+curl --max-time 2 -X POST http://localhost:5001/start -d '{"scenario":"default"}' -H "Content-Type: application/json"
+```
+
+### high latency network
+
+High latency network scenario.
+
+Execute the following command:
+```bash
+
+curl --max-time 2 -X POST http://localhost:5001/start -d '{"scenario":"overload"}' -H "Content-Type: application/json"
+```
+
+### failing services
+
+Failing services scenario.
+
+Execute the following command:
+```bash
+
+curl --max-time 2 -X POST http://localhost:5001/start -d '{"scenario":"always-fail"}' -H "Content-Type: application/json"
 ```
